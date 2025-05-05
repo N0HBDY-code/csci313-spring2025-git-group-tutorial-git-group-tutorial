@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-games',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './games.component.html',
-  styleUrl: './games.component.css'
+  styleUrls: ['./games.component.css']
 })
-export class GamesComponent {
-
-}
+export class GamesComponent {}

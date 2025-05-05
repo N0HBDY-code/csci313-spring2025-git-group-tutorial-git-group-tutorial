@@ -1,0 +1,7 @@
+:host {
+    display: block;
+    padding-top: 70px; /* Adjust to match navbar height */
+    position: relative;
+    z-index: 1;
+  }
+  

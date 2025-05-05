@@ -1,10 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common'; // for ngIf, etc.
 import { AuthService } from '../auth.service';
 import { User } from 'firebase/auth';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
+  imports: [RouterModule, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -22,10 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout().then(() => {
-      // Navigate to login after logout completes
-      window.location.href = '/login'; // Hard reload to reset state
-      // OR use Angular router:
-      // this.router.navigate(['/login']);
+      window.location.href = '/login';
     });
   }
 

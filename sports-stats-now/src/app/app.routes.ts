@@ -1,38 +1,48 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { RegisterComponent } from './register/register.component';
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        redirectTo:'login',
-        pathMatch: 'full'
-    },
-    {
-        path: 'login',
-        component: LoginComponent,
-        title: 'Login'
-    },
-    {
-        path: 'dashboard',
-        component: DashboardComponent,
-        title: 'Dashboard'
-    },
-        {
-        path: 'register',
-        component: RegisterComponent,
-        title: 'Register'
-    },
-    {
-        path: 'verify-email',
-        component: VerifyEmailComponent
-    },
-    {
-        path: 'forgot-password',
-        component: ForgotPasswordComponent
-    }
-
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'teams',
+    loadComponent: () =>
+      import('./teams/teams.component').then(m => m.TeamsComponent)
+  },
+  {
+    path: 'games',
+    loadComponent: () =>
+      import('./games/games.component').then(m => m.GamesComponent)
+  },
+  {
+    path: 'analytics',
+    loadComponent: () =>
+      import('./analytics/analytics.component').then(m => m.AnalyticsComponent)
+  },
+  {
+    path: 'reports',
+    loadComponent: () =>
+      import('./reports/reports.component').then(m => m.ReportsComponent)
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: '/dashboard'
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+  }
 ];
