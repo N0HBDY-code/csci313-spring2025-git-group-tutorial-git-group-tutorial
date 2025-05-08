@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // for ngIf, etc.
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 import { User } from 'firebase/auth';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +16,16 @@ import { Subscription } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   user: User | null = null;
   private userSub!: Subscription;
+  games$: Observable<any[]>;
+  today: Date = new Date();
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private firestore: Firestore) {
+    const gamesCollection = collection(this.firestore, 'games');
+    this.games$ = collectionData(gamesCollection, { idField: 'id' });
+  }
 
   ngOnInit(): void {
-    this.userSub = this.authService.currentUser.subscribe(user => {
+    this.userSub = this.authService.currentUser.subscribe((user: User | null) => {
       this.user = user;
     });
   }

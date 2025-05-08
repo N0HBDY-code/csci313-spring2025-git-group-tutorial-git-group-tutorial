@@ -1,17 +1,60 @@
 <div class="container mt-5">
-  <div class="row">
-    <div class="col"></div>
-    <div class="col-md-4">
-      <div class="text-center">
-        <div class="card shadow">
-          <div class="card-body">
-            <div>User ID: {{ user?.uid }}</div>
-            <div>User Name: {{ user?.displayName }}</div>
-            <div>Email: {{ user?.email }}</div>
-          </div>
+  <!-- Welcome Header -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <div class="card bg-light shadow text-center">
+        <div class="card-body">
+          <h4 class="card-title">Welcome to the Sports Dashboard</h4>
+          <p class="card-text">Live game data and user info will appear below.</p>
         </div>
       </div>
     </div>
-    <div class="col"></div>
+  </div>
+
+  <!-- Current Date Card -->
+  <div class="row mb-4 justify-content-center">
+    <div class="col-md-6">
+      <div class="card text-white bg-dark shadow text-center">
+        <div class="card-body">
+          <h4 class="card-title">Live Game Date</h4>
+          <p class="card-text fs-5">{{ today | date:'fullDate' }} - {{ today | date:'shortTime' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Info Card -->
+  <div class="row justify-content-center" *ngIf="user">
+    <div class="col-md-4">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <div><strong>User ID:</strong> {{ user.uid }}</div>
+          <div><strong>User Name:</strong> {{ user.displayName }}</div>
+          <div><strong>Email:</strong> {{ user.email }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Games List -->
+  <div class="row mt-4 justify-content-center">
+    <div class="col-md-8">
+      <h4 class="text-center mb-3">Live Games</h4>
+      <div *ngIf="games$ | async as games; else loading">
+        <div class="card mb-3" *ngFor="let game of games">
+          <div class="card-body">
+            <h5 class="card-title">{{ game.name || 'Unnamed Game' }}</h5>
+            <p class="card-text">
+              <strong>Date:</strong> {{ game.date?.toDate() | date:'medium' }}<br>
+              <strong>Location:</strong> {{ game.location || 'TBD' }}<br>
+              <strong>Score:</strong> {{ game.score || 'N/A' }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <ng-template #loading>
+        <div class="text-center">Loading games...</div>
+      </ng-template>
+    </div>
   </div>
 </div>
