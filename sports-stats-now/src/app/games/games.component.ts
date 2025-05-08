@@ -55,7 +55,7 @@ export class GamesComponent implements OnInit {
   players: Player[] = [];
   playerStatsMap: Record<string, PlayerStats> = {};
 
-  score = '';  // Manually entered or calculated
+  score = '';
 
   constructor(private firestore: Firestore) {}
 
@@ -96,36 +96,32 @@ export class GamesComponent implements OnInit {
     })) as Player[];
   }
 
-async createGame() {
-  if (!this.opponent || !this.date || !this.selectedTeamId) {
-    alert('Missing team or inputs');
-    return;
+  async createGame() {
+    if (!this.opponent || !this.date || !this.selectedTeamId) {
+      alert('Missing team or inputs');
+      return;
+    }
+
+    const gameData = {
+      opponent: this.opponent,
+      date: new Date(this.date),
+      location: 'TBD',
+      score: '',
+      teamId: this.selectedTeamId
+    };
+
+    const teamGamesRef = collection(this.firestore, `teams/${this.selectedTeamId}/games`);
+    await addDoc(teamGamesRef, gameData);
+
+    const globalGamesRef = collection(this.firestore, 'games');
+    await addDoc(globalGamesRef, gameData);
+
+    this.opponent = '';
+    this.date = '';
+    await this.loadGames();
   }
 
-  const gameData = {
-    opponent: this.opponent,
-    date: new Date(this.date), // Store as proper Date
-    location: 'TBD',
-    score: '',
-    teamId: this.selectedTeamId
-  };
-
-  // Save in team-specific games collection
-  const teamGamesRef = collection(this.firestore, `teams/${this.selectedTeamId}/games`);
-  await addDoc(teamGamesRef, gameData);
-
-  // Also save in global "games" collection for dashboard
-  const globalGamesRef = collection(this.firestore, 'games');
-  await addDoc(globalGamesRef, gameData);
-
-  this.opponent = '';
-  this.date = '';
-  await this.loadGames();
-}
-
-
   async selectGame(gameId: string) {
-    // Toggle stats view
     if (this.selectedGameId === gameId) {
       this.selectedGameId = null;
       return;
@@ -150,21 +146,17 @@ async createGame() {
     const statDoc = doc(this.firestore, `teams/${this.selectedTeamId}/games/${this.selectedGameId}/stats/${playerId}`);
     await setDoc(statDoc, stats);
 
-    // Compute total team score from player stats
     let teamScore = 0;
     for (const stat of Object.values(this.playerStatsMap)) {
       teamScore += stat.points;
     }
 
-    // You can replace this with user input or another source
-    const opponentScore = 32; // Static value for now
+    const opponentScore = 32;
     this.score = `${teamScore}-${opponentScore}`;
 
-    // Update team-specific game doc
     const teamGameDoc = doc(this.firestore, `teams/${this.selectedTeamId}/games/${this.selectedGameId}`);
     await setDoc(teamGameDoc, { score: this.score }, { merge: true });
 
-    // Update global games collection
     const globalGamesRef = collection(this.firestore, 'games');
     const snapshot = await getDocs(globalGamesRef);
     const matching = snapshot.docs.find(doc =>
@@ -175,29 +167,9 @@ async createGame() {
     if (matching) {
       await setDoc(matching.ref, { score: this.score }, { merge: true });
     }
-  }
-    this.score = totalPoints.toString();
-
-    // Update team game document
-    const teamGameDoc = doc(this.firestore, `teams/${this.selectedTeamId}/games/${this.selectedGameId}`);
-    await setDoc(teamGameDoc, { score: this.score }, { merge: true });
-
-    // Update global game document
-    const globalGamesRef = collection(this.firestore, 'games');
-    const snapshot = await getDocs(globalGamesRef);
-    const matching = snapshot.docs.find(doc =>
-      doc.data()['teamId'] === this.selectedTeamId &&
-      doc.data()['date']?.toDate?.().toDateString?.() === new Date(this.date).toDateString()
-    );
-
-    if (matching) {
-      await setDoc(matching.ref, { score: this.score }, { merge: true });
-    }
-  }
   }
 
   async deleteGame(gameId: string) {
-
     const confirmDelete = confirm('Are you sure you want to delete this game and its stats?');
     if (!confirmDelete || !this.selectedTeamId) return;
 
@@ -213,5 +185,4 @@ async createGame() {
     if (this.selectedGameId === gameId) this.selectedGameId = null;
     await this.loadGames();
   }
-}
 }
