@@ -1,5 +1,5 @@
+
 <div class="container mt-5">
-  <!-- Welcome Header -->
   <div class="row justify-content-center mb-4">
     <div class="col-md-6">
       <div class="card bg-light shadow text-center">
@@ -11,7 +11,6 @@
     </div>
   </div>
 
-  <!-- Current Date Card -->
   <div class="row mb-4 justify-content-center">
     <div class="col-md-6">
       <div class="card text-white bg-dark shadow text-center">
@@ -23,38 +22,13 @@
     </div>
   </div>
 
-  <!-- User Info Card -->
-  <div class="row justify-content-center" *ngIf="user">
-    <div class="col-md-4">
-      <div class="card shadow text-center">
-        <div class="card-body">
-          <div><strong>User ID:</strong> {{ user.uid }}</div>
-          <div><strong>User Name:</strong> {{ user.displayName }}</div>
-          <div><strong>Email:</strong> {{ user.email }}</div>
-        </div>
+  <div *ngFor="let game of games$ | async" class="mb-2">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ game.name || 'Untitled Game' }}</h5>
+        <p class="card-text">Date: {{ game.date?.toDate() | date }}</p>
+        <p class="card-text">Score: {{ game.totalPoints }}</p>
       </div>
-    </div>
-  </div>
-
-  <!-- Live Games List -->
-  <div class="row mt-4 justify-content-center">
-    <div class="col-md-8">
-      <h4 class="text-center mb-3">Live Games</h4>
-      <div *ngIf="games$ | async as games; else loading">
-        <div class="card mb-3" *ngFor="let game of games">
-          <div class="card-body">
-            <h5 class="card-title">{{ game.name || 'Unnamed Game' }}</h5>
-            <p class="card-text">
-              <strong>Date:</strong> {{ game.date?.toDate() | date:'medium' }}<br>
-              <strong>Location:</strong> {{ game.location || 'TBD' }}<br>
-              <strong>Score:</strong> {{ game.score || 'N/A' }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <ng-template #loading>
-        <div class="text-center">Loading games...</div>
-      </ng-template>
     </div>
   </div>
 </div>
