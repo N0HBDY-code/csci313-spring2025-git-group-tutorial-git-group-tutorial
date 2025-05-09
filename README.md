@@ -40,4 +40,4 @@ Our team does not plan to continue the project over the summer. While the system
 4. Video Demo Hosting
 
 The demo video is uploaded to Google Drive. Permissions are set to “Anyone with the link can view.” It has been tested in incognito mode.
-Link:
+Link: https://drive.google.com/file/d/1HsIE5JOLy2ZZ3T1eMCHNcEVxYz3pNdXw/view?usp=sharing
