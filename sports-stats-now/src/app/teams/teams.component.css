@@ -1,0 +1,6 @@
+:host {
+    display: block;
+    padding-top: 70px;
+    position: relative;
+    z-index: 1;
+  }
