@@ -1,3 +1,7 @@
+Team Members: 
+Christopher Dick
+Simon Rosenberg
+
 Original Scope and What Was Achieved
 
 The original goal of our project was to build a live sports statistics tracking system that supports real-time input, analytics, export, and role-based access for coaches, players, managers, and guests. We aimed to make it multi-sport capable, with user logins, editable stat sheets, and export options.
